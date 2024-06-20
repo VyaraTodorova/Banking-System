@@ -4,7 +4,8 @@
 class Person
 {
 public:
-	Person(const MyString name, const MyString surname, unsigned EGN, unsigned age);
+	Person();
+	Person(const MyString& name, const MyString& surname, unsigned EGN, unsigned age);
 	const MyString& getName()const;
 	const MyString& getSurname()const;
 	unsigned getEGN()const;

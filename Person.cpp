@@ -1,6 +1,8 @@
 #include "Person.h"
-Person::Person(const MyString name, const MyString surname, unsigned EGN, unsigned age) :
-	name(name), surname(surname), EGN(EGN), age(age){}
+
+Person::Person() : name(""), surname(""), EGN(0), age(0) {}
+Person::Person(const MyString& name, const MyString& surname, unsigned EGN, unsigned age) :
+	name(name), surname(surname), EGN(EGN), age(age) {}
 
 const MyString& Person::getName()const
 {

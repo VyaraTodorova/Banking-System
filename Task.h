@@ -1,24 +1,38 @@
 #pragma once
 #include "MyString.h"
+#include "Person.h"
+#include "BankAccount.h"
 
-enum Type {
+enum TypeTask {
 	Open,
 	Close,
-	Change
+	Change,
+	Unknown
 };
 
 class Task
 {
 public:
-	Task(Type type, const MyString& name, unsigned index);
-	Type getType()const;
+	Task();
+	Task(TypeTask type, const MyString& name, const Person& person, const MyString& bank, const BankAccount& account);
+
+	TypeTask getType()const;
 	const MyString& getName() const;
-	unsigned getIndex() const;
-	void setIndex(unsigned index);
+	unsigned getEGNOfUser()const;
+	const MyString& getBankName()const;
+	bool getApproved()const;
+	unsigned getAccountAmount()const;
+
+	void makeApprovedTrue();
+	void viewTask()const;
 
 private:
-	Type type;
+	TypeTask type;
 	MyString name;
-	unsigned index = 0;
+	Person user;
+	MyString bank; 
+	BankAccount account;
+	bool approved = false;
 };
+
 

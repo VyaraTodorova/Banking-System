@@ -45,3 +45,11 @@ private:
     size_t _allocatedDataSize;
 };
 
+bool operator==(const MyString& lhs, const MyString& rhs);
+bool operator!=(const MyString& lhs, const MyString& rhs);
+bool operator<(const MyString& lhs, const MyString& rhs);
+bool operator<=(const MyString& lhs, const MyString& rhs);
+bool operator>(const MyString& lhs, const MyString& rhs);
+bool operator>=(const MyString& lhs, const MyString& rhs);
+
+

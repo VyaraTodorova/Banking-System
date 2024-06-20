@@ -1,4 +1,5 @@
 #include "MyString.h"
+#include "MyString.h"
 #include <cstring>
 #include <algorithm>
 #pragma warning (disable : 4996)
@@ -107,8 +108,6 @@ MyString& MyString::operator+=(const MyString& other)
     if (getSize() + other.getSize() + 1 > _allocatedDataSize)
         resize(dataToAllocByStringLen(getSize() + other.getSize()));
 
-    // we need to use strncat instead of strcat, because strcat will not work for str += str 
-    // (the terminating zero of str will be destroyed by the first char)
     std::strncat(_data, other._data, other.getSize());
 
     _size = getSize() + other.getSize();
