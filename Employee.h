@@ -16,12 +16,14 @@ public:
 	void whoami()const override;
 
 	const MyString& getBankName()const;
+
 	unsigned getTasksCount()const;
 	const Task& getTask(unsigned index)const;
-
 	void addTask(const MyString& bankName, const Person& user, TypeTask type, const MyString& name, const BankAccount& account);
 	void showAllTasks()const;
 	void removeTask(unsigned index);
+	void changeApproveWithIndex(unsigned index);
+	void setAccountBalanceWithIndex(unsigned index, unsigned newBalance);
 
 protected:
 	MyString bankName;

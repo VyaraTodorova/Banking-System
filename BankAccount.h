@@ -7,6 +7,8 @@ public:
 	BankAccount(unsigned accountNumber, unsigned amount, MyString bankName);
 
 	void setAmount(unsigned newAmount);
+	void setBankName(const MyString& newName);
+	void setAccountNumber(unsigned newNumber);
 
 	const MyString& getBankName()const;
 	unsigned getAmount()const;

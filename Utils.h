@@ -1,6 +1,5 @@
 #pragma once
 
-
 bool isUpper(char symbol)
 {
 	return symbol >= 'A' && symbol <= 'Z';
@@ -33,3 +32,4 @@ int strLen(const char* str)
 
 	return count;
 }
+

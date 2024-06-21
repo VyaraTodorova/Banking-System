@@ -30,7 +30,7 @@ unsigned Task::getEGNOfUser()const
 	return user.getEGN();
 }
 
-const MyString& Task::getBankName()const
+const MyString& Task::getBank()const
 {
 	return bank;
 }
@@ -45,6 +45,14 @@ unsigned Task::getAccountAmount()const
 	return account.getAmount();
 }
 
+unsigned Task::getAccountNumber()const
+{
+	return account.getAccountNumber();
+}
+void Task::setAccountBalance(unsigned newBalance)
+{
+	account.setAmount(newBalance);
+}
 void Task::makeApprovedTrue()
 {
 	approved = true;

@@ -1,4 +1,5 @@
 #include "BankingSystem.h"
+#include "HelpFunctions.h"
 
 void BankingSystem::login()
 {
@@ -215,9 +216,11 @@ void BankingSystem::open(const MyString& bankName)
 		throw;
 	}
 
-	Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), clients[currentIndex].getEGN(), clients[currentIndex].getAge());
+	Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), 
+		clients[currentIndex].getEGN(), clients[currentIndex].getAge());
 	BankAccount bankAccount;
-	employees[index].addTask(bankName, person, TypeTask::Open, clients[currentIndex].getName() + "wants to open an account", bankAccount);
+	employees[index].addTask(bankName, person, TypeTask::Open, 
+		clients[currentIndex].getName() + "wants to open an account", bankAccount);
 	
 
 }
@@ -234,7 +237,8 @@ if (!checkIfBankExist(bankName))
 	throw std::invalid_argument("This bank does not exist.");
 }
 
-Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), clients[currentIndex].getEGN(), clients[currentIndex].getAge());
+Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), 
+	clients[currentIndex].getEGN(), clients[currentIndex].getAge());
 BankAccount bankAccount;
 try
 {
@@ -262,7 +266,8 @@ catch (std::exception& e)
 	throw;
 }
 
-employees[index].addTask(bankName, person, TypeTask::Close, clients[currentIndex].getName() + "wants to close their account.", bankAccount);
+employees[index].addTask(bankName, person, TypeTask::Close, clients[currentIndex].getName() +
+												"wants to close their account.", bankAccount);
 }
 
 void BankingSystem::redeem(const MyString& bankName, unsigned account_number, const MyString& code)
@@ -270,7 +275,7 @@ void BankingSystem::redeem(const MyString& bankName, unsigned account_number, co
 
 }
 
-void BankingSystem::change(const MyString& newBankName, const MyString& currentBankName, unsigned account_number)
+void BankingSystem::change(const MyString& newBankName, const MyString& currentBankName, unsigned accountNumber)
 {
 	if (currentUserType != typeUser::client || isUsed == false)
 	{
@@ -298,19 +303,12 @@ void BankingSystem::change(const MyString& newBankName, const MyString& currentB
 		throw;
 	}
 
-	Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), clients[currentIndex].getEGN(), clients[currentIndex].getAge());
+	Person person(clients[currentIndex].getName(), clients[currentIndex].getSurname(), 
+		clients[currentIndex].getEGN(), clients[currentIndex].getAge());
 	BankAccount bankAccount;
-	try
-	{
-		bankAccount = clients[currentIndex].getAccount(account_number);
-	}
-	catch (std::invalid_argument& ia)
-	{
-		std::cout << ia.what() << std::endl;
-		throw;
-	}
-
-	employees[index].addTask(newBankName, person, TypeTask::Change, clients[currentIndex].getName() + "wants to join " + newBankName, bankAccount);
+	bankAccount.setAccountNumber(accountNumber);
+	employees[index].addTask(newBankName, person, TypeTask::Change,
+		clients[currentIndex].getName() + "wants to join " + newBankName, bankAccount);
 }
 
 void BankingSystem::list(const MyString& bankName)const
@@ -371,26 +369,56 @@ void BankingSystem::approve(unsigned taskId)
 		throw std::exception("You do not have access to this command");
 	}
 
+	int index = getIndexOfClientWithEGN(employees[currentIndex].getTask(taskId).getEGNOfUser());
+
+	if (index == -1)
+	{
+		throw std::exception("Something went wrong. Thå user does not exist.");
+	}
+
 	if (employees[currentIndex].getTask(taskId).getType() == TypeTask::Open)
 	{
-		int index = getIndexOfClientWithEGN(employees[currentIndex].getTask(taskId).getEGNOfUser());
-
-		if (index == 1)
-		{
-			throw std::exception("Something went wrong. Thå user does not exist.");
-		}
-
-		unsigned number = 0;
-		std::cout << "Set account number: ";
-		std::cin >> number;
-
-		clients[index].addAccount(number, employees[currentIndex].getTask(taskId).getAccountAmount(), employees[currentIndex].getTask(taskId).getBankName());
-		employees[currentIndex].removeTask(taskId);
-		/*MyString mess = "You opened an account in" + employees[currentIndex].getTask(taskId).getBankName() +
-			". Your account id is " + number + ".";
-		clients[index].addMessage()*/
+		unsigned number = getUniqueNumber();
+		clients[index].addAccount(number, employees[currentIndex].getTask(taskId).getAccountAmount(),
+			employees[currentIndex].getTask(taskId).getBank());
+		
+		MyString accountNumberString = toString(number);
+		MyString mess = "You opened an account in" + employees[currentIndex].getTask(taskId).getBank() +
+			". Your account id is " + accountNumberString + ".";
+		clients[index].addMessage(mess);
 	}
-	//is not ready!!!!!
+	else
+	{
+		if (employees[currentIndex].getTask(taskId).getType() == TypeTask::Close)
+		{
+			clients[index].closeAccount(employees[currentIndex].getTask(taskId).getAccountNumber());
+
+			unsigned number = getUniqueNumber();
+			MyString accountNumberString = toString(number);
+			MyString mess = "You opened an account in" + employees[currentIndex].getTask(taskId).getBank() +
+				". Your account id is " + accountNumberString + ".";
+			clients[index].addMessage(mess);
+		}
+		else
+		{
+			if (employees[currentIndex].getTask(taskId).getApproved())
+			{
+				unsigned number = getUniqueNumber();
+				MyString accountNumberString = toString(number);
+				clients[index].changeAccountBank(employees[currentIndex].getTask(taskId).getAccountNumber(),
+					employees[currentIndex].getBankName(), number);
+				MyString mess = "You changed your savings account to " + 
+					employees[currentIndex].getBankName() +" New account id is " + accountNumberString + ".";
+				clients[index].addMessage(mess);
+			}
+			else
+			{
+				std::cout << "Cannot proceed - Please make sure " << clients[index].getName() << " is real user." << std::endl;
+			}
+		}
+	}
+
+	employees[currentIndex].removeTask(taskId);
 }
 
 void BankingSystem::disapprove(unsigned taskId, const MyString& message)
@@ -399,16 +427,45 @@ void BankingSystem::disapprove(unsigned taskId, const MyString& message)
 	{
 		throw std::exception("You do not have access to this command");
 	}
+
+	int index = getIndexOfClientWithEGN(employees[currentIndex].getTask(taskId).getEGNOfUser());
+
+	if (index == -1)
+	{
+		throw std::exception("Something went wrong. Thå user does not exist.");
+	}
+
+	clients[index].addMessage(message);
+	employees[currentIndex].removeTask(taskId);
 }
 
-bool BankingSystem::validate(unsigned taskId)
+void BankingSystem::validate(unsigned taskId)
 {
 	if (currentUserType != typeUser::employee || isUsed == false)
 	{
 		throw std::exception("You do not have access to this command");
 	}
 
-	return true;
+	int index = getIndexOfClientWithEGN(employees[currentIndex].getTask(taskId).getEGNOfUser());
+
+	if (index == -1)
+	{
+		throw std::exception("Something went wrong. Thå user does not exist.");
+	}
+
+	BankAccount bankAccount;
+	try
+	{
+		bankAccount = clients[index].getAccount(employees[currentIndex].getTask(taskId).getAccountNumber());
+	}
+	catch (std::invalid_argument& ia)
+	{
+		std::cout << ia.what() << std::endl;
+		throw;
+	}
+
+	employees[currentIndex].setAccountBalanceWithIndex(taskId, bankAccount.getAmount());
+	employees[currentIndex].changeApproveWithIndex(taskId);
 }
 
 void BankingSystem::sendCheck(unsigned sum, const MyString& bankName, unsigned EGN)
@@ -528,3 +585,26 @@ int BankingSystem::getIndexOfClientWithEGN(unsigned EGN)const
 	return -1;
 }
 
+bool BankingSystem::checkIfAccountNumberIsUnique(unsigned number)const
+{
+	for (int i = 0; i < clients.getCount(); i++)
+	{
+		if (!clients[i].checkIfAccountNumberIsUniqueForPerson(number))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+unsigned BankingSystem::getUniqueNumber()const
+{
+	unsigned number;
+	do
+	{
+		number = randomNumber();
+	} while (checkIfAccountNumberIsUnique(number));
+
+	return number;
+}

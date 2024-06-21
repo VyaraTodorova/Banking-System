@@ -10,6 +10,16 @@ void BankAccount::setAmount(unsigned newAmount)
 	amount = newAmount;
 }
 
+void BankAccount::setBankName(const MyString& newName)
+{
+	bankName = newName;
+}
+
+void BankAccount::setAccountNumber(unsigned newNumber)
+{
+	accountNumber = newNumber;
+}
+
 unsigned BankAccount::getAmount()const
 {
 	return amount;

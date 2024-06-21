@@ -1,5 +1,4 @@
 #include "MyString.h"
-#include "MyString.h"
 #include <cstring>
 #include <algorithm>
 #pragma warning (disable : 4996)

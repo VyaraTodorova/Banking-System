@@ -19,9 +19,11 @@ public:
 	TypeTask getType()const;
 	const MyString& getName() const;
 	unsigned getEGNOfUser()const;
-	const MyString& getBankName()const;
+	const MyString& getBank()const;
 	bool getApproved()const;
 	unsigned getAccountAmount()const;
+	unsigned getAccountNumber()const;
+	void setAccountBalance(unsigned newBalance);
 
 	void makeApprovedTrue();
 	void viewTask()const;

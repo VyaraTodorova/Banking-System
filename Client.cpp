@@ -41,6 +41,29 @@ void Client::addAccount(unsigned accountNumber, unsigned amount, MyString bankNa
 	accounts.add(account);
 }
 
+void Client::closeAccount(unsigned accountNumber)
+{
+	for (int i = 0; i < accounts.getCount(); i++)
+	{
+		if (accounts[i].getAccountNumber() == accountNumber)
+		{
+			accounts.remove(i);
+		}
+	}
+}
+
+void Client::changeAccountBank(unsigned accountNumber, const MyString& newBankName, unsigned newAccountNumber)
+{
+	for (int i = 0; i < accounts.getCount(); i++)
+	{
+		if (accounts[i].getAccountNumber() == accountNumber)
+		{
+			accounts[i].setBankName(newBankName);
+			accounts[i].setAccountNumber(newAccountNumber);
+		}
+	}
+}
+
 void Client::showAmountInAccount(const MyString& bankName, unsigned accountNumber)const
 {
 	for (int i = 0; i < accounts.getCount(); i++)
@@ -82,7 +105,18 @@ unsigned Client::getAccountNumberFromIndex(unsigned index)const
 {
 	return accounts[index].getAccountNumber();
 }
+bool Client::checkIfAccountNumberIsUniqueForPerson(unsigned number)const
+{
+	for (int i = 0; i < accounts.getCount(); i++)
+	{
+		if (accounts[i].getAccountNumber() == number)
+		{
+			return false;
+		}
+	}
 
+	return true;
+}
 void Client::showMessages()const
 {
 	for (int i = 0; i < messages.getCount(); i++)

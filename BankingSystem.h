@@ -3,6 +3,8 @@
 #include "Employee.h"
 #include "ThirdPartyEmployee.h"
 #include "Collection.hpp"
+
+
 constexpr unsigned MAX_TASKS = 10000;
 
 class BankingSystem
@@ -26,7 +28,7 @@ public:
 	void view(unsigned taskId)const;
 	void approve(unsigned taskId);
 	void disapprove(unsigned taskId, const MyString& message);
-	bool validate(unsigned taskId);
+	void validate(unsigned taskId);
 
 	void sendCheck(unsigned sum, const MyString& bankName, unsigned EGN);
 
@@ -46,6 +48,8 @@ private:
 	int getIndexOfClient(const MyString& name, unsigned password)const;
 	int getIndexOfThirdPartyEmployees(const MyString& name, unsigned password)const;
 	int getIndexOfClientWithEGN(unsigned EGN)const;
+	unsigned getUniqueNumber()const;
+	bool checkIfAccountNumberIsUnique(unsigned number)const;
 };
 
 

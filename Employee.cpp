@@ -78,3 +78,13 @@ void Employee::removeTask(unsigned index)
 {
 	tasksCollection.remove(index);
 }
+
+void Employee::changeApproveWithIndex(unsigned index)
+{
+	tasksCollection[index].makeApprovedTrue();
+}
+
+void Employee::setAccountBalanceWithIndex(unsigned index, unsigned newBalance)
+{
+	tasksCollection[index].setAccountBalance(newBalance);
+}
