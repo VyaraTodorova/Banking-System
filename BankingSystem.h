@@ -10,11 +10,12 @@ constexpr unsigned MAX_TASKS = 10000;
 class BankingSystem
 {
 public:
-	void login();
-	void signup();
+	void login(const MyString& name, unsigned password, const MyString& role);
+	void signup(const MyString& name, const MyString& surname, unsigned EGN, unsigned age, unsigned password, const MyString& role);
 	void createBank(const MyString& name);
 	void help()const;
 	void whoami()const;
+	void exit();
 
 	void check_avl(const MyString& bankName, unsigned accountNumber)const;
 	void open(const MyString& bankName);
@@ -31,6 +32,9 @@ public:
 	void validate(unsigned taskId);
 
 	void sendCheck(unsigned sum, const MyString& bankName, unsigned EGN);
+
+	void writeToFile() const;
+	void readFromFiLe();
 
 private:
 	Collection<Client> clients;
@@ -50,6 +54,8 @@ private:
 	int getIndexOfClientWithEGN(unsigned EGN)const;
 	unsigned getUniqueNumber()const;
 	bool checkIfAccountNumberIsUnique(unsigned number)const;
+	const MyString& getUniqueCode()const;
+	bool checkIfCodeIsUnique(const MyString& code)const;
 };
 
 

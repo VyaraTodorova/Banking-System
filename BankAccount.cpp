@@ -1,4 +1,5 @@
 #include "BankAccount.h"
+#include "SerializeFunctions.h"
 
 BankAccount::BankAccount() : accountNumber(0), amount(0) {}
 
@@ -33,4 +34,18 @@ unsigned BankAccount::getAccountNumber()const
 const MyString& BankAccount::getBankName()const
 {
 	return bankName;
+}
+
+void BankAccount::writeToFile(std::ofstream& ofs) const
+{
+	writeStringToFile(ofs, bankName);
+	ofs.write((const char*)&accountNumber, sizeof(unsigned));
+	ofs.write((const char*)&amount, sizeof(unsigned));
+}
+
+void BankAccount::readFromFiLe(std::ifstream& ifs)
+{
+	bankName = readStringFromFile(ifs);
+	ifs.read((char*)&accountNumber, sizeof(unsigned));
+	ifs.read((char*)&amount, sizeof(unsigned));
 }

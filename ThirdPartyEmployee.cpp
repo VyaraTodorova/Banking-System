@@ -1,4 +1,5 @@
 #include "ThirdPartyEmployee.h"
+#include "SerializeFunctions.h"
 
 ThirdPartyEmployee::ThirdPartyEmployee() : User() {}
 
@@ -22,3 +23,20 @@ void ThirdPartyEmployee::whoami()const
 	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
 }
 
+void ThirdPartyEmployee::writeToFile(std::ofstream& ofs) const
+{
+	Person::writeToFile(ofs);
+
+	unsigned pass = getPassword();
+	ofs.write((const char*)&pass, sizeof(unsigned));
+
+}
+
+void ThirdPartyEmployee::readFromFiLe(std::ifstream& ifs)
+{
+	Person::readFromFiLe(ifs);
+
+	unsigned pass = 0;
+	ifs.read((char*)&pass, sizeof(unsigned));
+	setPassword(pass);
+}

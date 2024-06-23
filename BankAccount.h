@@ -14,6 +14,8 @@ public:
 	unsigned getAmount()const;
 	unsigned getAccountNumber()const;
 
+	void writeToFile(std::ofstream& ofs) const;
+	void readFromFiLe(std::ifstream& ifs);
 private:
 	MyString bankName = "";
 	unsigned accountNumber = 0;

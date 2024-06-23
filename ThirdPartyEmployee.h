@@ -10,6 +10,9 @@ public:
 	const typeUser& getTypeOfUser()const override;
 	void help()const override;
 	void whoami()const override;
+
+	void writeToFile(std::ofstream& ofs) const;
+	void readFromFiLe(std::ifstream& ifs);
 };
 
 

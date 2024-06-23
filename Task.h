@@ -28,6 +28,8 @@ public:
 	void makeApprovedTrue();
 	void viewTask()const;
 
+	void writeToFile(std::ofstream& ofs) const;
+	void readFromFiLe(std::ifstream& ifs);
 private:
 	TypeTask type;
 	MyString name;

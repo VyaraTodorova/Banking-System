@@ -1,5 +1,7 @@
 #include "Task.h"
-const MyString& getaStringFromTaskType(const TypeTask& type)
+#include "SerializeFunctions.h"
+
+const char* getaStringFromTaskType(const TypeTask& type)
 {
 	switch (type)
 	{
@@ -74,3 +76,32 @@ void Task::viewTask()const
 	}
 }
 
+void Task::writeToFile(std::ofstream& ofs) const
+{
+	ofs.write((const char*)&type, sizeof(TypeTask));
+
+	writeStringToFile(ofs, name);
+
+	user.writeToFile(ofs);
+
+	writeStringToFile(ofs, bank);
+
+	account.writeToFile(ofs);
+
+	ofs.write((const char*)&approved, sizeof(bool));
+}
+
+void Task::readFromFiLe(std::ifstream& ifs)
+{
+	ifs.read((char*)&type, sizeof(TypeTask));
+
+	name = readStringFromFile(ifs);
+
+	user.readFromFiLe(ifs);
+
+	bank = readStringFromFile(ifs);
+
+	account.readFromFiLe(ifs);
+
+	ifs.read((char*)&approved, sizeof(bool));
+}

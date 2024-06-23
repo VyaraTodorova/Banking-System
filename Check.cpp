@@ -1,5 +1,6 @@
 #include "Check.h"
 #include "Utils.h"
+#include "SerializeFunctions.h"
 constexpr unsigned CHECK_LEN = 3;
 
 Check::Check() : check("", 0) {}
@@ -37,3 +38,31 @@ bool Check::isGood(const char* str)const
 	return true;
 }
 
+void Check::setSum(unsigned sum)
+{
+	check.setRhs(sum);
+}
+
+unsigned Check::getSum()const
+{
+	return check.getRhs();
+}
+
+const MyString& Check::getCode()const
+{
+	return check.getLhs();
+}
+
+void Check::writeToFile(std::ofstream& ofs) const
+{
+	writeStringToFile(ofs, check.getLhs());
+	ofs.write((const char*)&check.getRhs(), sizeof(unsigned int));
+}
+
+void Check::readFromFiLe(std::ifstream& ifs)
+{
+	check.setLhs(readStringFromFile(ifs));
+	unsigned int checkNum = 0;
+	ifs.read((char*)&checkNum, sizeof(unsigned int));
+	check.setRhs(checkNum);
+}

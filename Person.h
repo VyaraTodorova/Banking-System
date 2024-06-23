@@ -11,6 +11,13 @@ public:
 	unsigned getEGN()const;
 	unsigned getAge()const;
 
+	void setName(const MyString& name);
+	void setSurname(const MyString& surname);
+	void setEGN(unsigned EGN);
+	void setAge(unsigned age);
+
+	void writeToFile(std::ofstream& ofs) const;
+	void readFromFiLe(std::ifstream& ifs);
 private:
 	MyString name;
 	MyString surname;

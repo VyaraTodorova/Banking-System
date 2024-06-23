@@ -12,14 +12,14 @@ public:
 	Collection<T>operator=(Collection<T>&& other);
 
 	void add(const T& element);
-	void add(T& element);
+	void add(T&& element);
 	void edit(const T& element, size_t index);
 	void remove(unsigned index);
+	void clear();
 
 	T& operator[](size_t index);
 	T operator[](size_t index)const;
 	size_t getCount()const;
-	/*size_t getIndex(const T& object)const;*/
 
 	~Collection();
 private:
@@ -29,7 +29,7 @@ private:
 	void copyFrom(const Collection& other);
 	void moveFrom(Collection&& other);
 	void free();
-	void resize();
+	void resize(size_t newCap);
 };
 
 template<typename T>
@@ -64,14 +64,14 @@ void Collection<T>::moveFrom(Collection&& other)
 }
 
 template<typename T>
-void Collection<T>::resize()
+void Collection<T>::resize(size_t newCap)
 {
-	capacity *= 2;
+	capacity = newCap;
 	T* newCollection = new T[capacity];
 
 	for (size_t i = 0; i < size; i++)
 	{
-		newCollection[i] = collection[i];
+		newCollection[i] = std::move(collection[i]);
 	}
 
 	delete[] collection;
@@ -133,18 +133,18 @@ void Collection<T>::add(const T& element)
 {
 	if (size >= capacity)
 	{
-		resize();
+		resize(capacity * 2);
 	}
 
 	collection[size++] = element;
 }
 
 template<typename T>
-void Collection<T>::add(T& element)
+void Collection<T>::add(T&& element)
 {
 	if (size >= capacity)
 	{
-		resize();
+		resize(capacity * 2);
 	}
 	
 	collection[size++] = std::move(element);
@@ -158,7 +158,18 @@ void Collection<T>::edit(const T& element, size_t index)
 		throw std::invalid_argument("Invalid index.");
 	}
 
+	if (size == capacity)
+	{
+		resize(2 * capacity);
+	}
+	size++;
+
+	for (int i = size - 1; i > index; i--)
+	{
+		collection[i] = std::move(collection[i - 1]);
+	}
 	collection[index] = element;
+	
 }
 
 template<typename T>
@@ -174,11 +185,14 @@ void Collection<T>::remove(unsigned index)
 		throw std::invalid_argument("Invalid index");
 	}
 
-	if (index != size - 1)
+	for (int i = index; i < size - 1; i++)
 	{
-		collection[index] = collection[size - 1];
+		collection[i] = std::move(collection[i + 1]);
 	}
 	size--;
+
+	if (size == capacity / 4)
+		resize(capacity / 2);
 }
 
 template<typename T>
@@ -190,7 +204,7 @@ size_t Collection<T>::getCount()const
 template<typename T>
 T& Collection<T>::operator[](size_t index)
 {
-	if (index > size)
+	if (index >= size)
 	{
 		throw std::invalid_argument("Invalid index");
 	}
@@ -200,22 +214,19 @@ T& Collection<T>::operator[](size_t index)
 template<typename T>
 T Collection<T>::operator[](size_t index)const
 {
-	if (index > size)
+	if (index >= size)
 	{
 		throw std::invalid_argument("Invalid index");
 	}
 	return collection[index];
 }
-//template<typename T>
-//size_t Collection<T>::getIndex(const T& object)const
-//{
-//	for (int i = 0; i < size; i++)
-//	{
-//		if (collection[i] == object)
-//		{
-//			return i;
-//		}
-//	}
-//
-//	throw std::invalid_argument("The object is nit found.");
-//}
+
+template<typename T>
+void Collection<T>::clear()
+{
+	delete[] collection;
+	size = 0;
+	capacity = DEFAULT_SIZE;
+	collection = new T[capacity];
+}
+

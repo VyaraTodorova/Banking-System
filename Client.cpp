@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "SerializeFunctions.h"
 
 Client::Client() : User(), address("") {}
 
@@ -21,13 +22,56 @@ void Client::help()const
 
 void Client::whoami()const
 {
-	std::cout << "You are " + getName() + getSurname() << std::endl;
+	std::cout << "You are " + getName() + " " + getSurname() << std::endl;
 	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
 }
 
 void Client::addCheck(const Check& check)
 {
-	cashedChecks.add(check);
+	checks.add(check);
+}
+
+int Client::getIndexOfCheck(const MyString& code)const
+{
+	for (int i = 0; i < checks.getCount(); i++)
+	{
+		if (code == checks[i].getCode())
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void Client::cashCheck(unsigned checkIndex, unsigned accountIndex)
+{
+	unsigned oldAmount = accounts[accountIndex].getAmount();
+	accounts[accountIndex].setAmount(oldAmount + checks[checkIndex].getSum());
+
+	cashedChecks.add(checks[checkIndex]);
+	checks.remove(checkIndex);
+}
+
+bool Client::checkIfCodeIsUniqueForPerson(const MyString& code)const
+{
+	for (int i = 0; i < checks.getCount(); i++)
+	{
+		if (checks[i].getCode() == code)
+		{
+			return false;
+		}
+	}
+
+	for (int i = 0; i < cashedChecks.getCount(); i++)
+	{
+		if (cashedChecks[i].getCode() == code)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void Client::addMessage(const MyString& mess)
@@ -35,9 +79,8 @@ void Client::addMessage(const MyString& mess)
 	messages.add(mess);
 }
 
-void Client::addAccount(unsigned accountNumber, unsigned amount, MyString bankName)
+void Client::addAccount(const BankAccount& account)
 {
-	BankAccount account(accountNumber, amount, bankName); //???
 	accounts.add(account);
 }
 
@@ -105,6 +148,20 @@ unsigned Client::getAccountNumberFromIndex(unsigned index)const
 {
 	return accounts[index].getAccountNumber();
 }
+
+int Client::getIndexOfAccountFromNumber(unsigned number)const
+{
+	for (int i = 0; i < accounts.getCount(); i++)
+	{
+		if (accounts[i].getAccountNumber() == number)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
 bool Client::checkIfAccountNumberIsUniqueForPerson(unsigned number)const
 {
 	for (int i = 0; i < accounts.getCount(); i++)
@@ -125,3 +182,89 @@ void Client::showMessages()const
 	 }
 }
 
+void Client::clearAllMessages()
+{
+	messages.clear();
+}
+
+void Client::writeToFile(std::ofstream& ofs) const
+{
+	Person::writeToFile(ofs);
+
+	unsigned pass = getPassword();
+	ofs.write((const char*)&pass, sizeof(unsigned));
+
+	writeStringToFile(ofs, address);
+
+	size_t countChecks = checks.getCount();
+	ofs.write((const char*)&countChecks, sizeof(size_t));
+
+	for (int i = 0; i < countChecks; i++)
+	{
+		checks[i].writeToFile(ofs);
+	}
+
+	size_t countCashedChecks = cashedChecks.getCount();
+	ofs.write((const char*)&countCashedChecks, sizeof(size_t));
+
+	for (int i = 0; i < countCashedChecks; i++)
+	{
+		cashedChecks[i].writeToFile(ofs);
+	}
+
+	size_t countMess = messages.getCount();
+	ofs.write((const char*)&countMess, sizeof(size_t));
+
+	for (int i = 0; i < countMess; i++)
+	{
+		writeStringToFile(ofs, messages[i].c_str());
+	}
+
+	size_t countAccounts = accounts.getCount();
+	ofs.write((const char*)&countAccounts, sizeof(size_t));
+
+	for (int i = 0; i < countAccounts; i++)
+	{
+		accounts[i].writeToFile(ofs);
+	}
+}
+
+void Client::readFromFiLe(std::ifstream& ifs)
+{
+	Person::readFromFiLe(ifs);
+
+	unsigned pass = 0;
+	ifs.read((char*)&pass, sizeof(unsigned));
+	setPassword(pass);
+
+	address = readStringFromFile(ifs);
+
+	size_t countChecks = 0;
+	ifs.read((char*)&countChecks, sizeof(size_t));
+
+	for (int i = 0; i < countChecks; i++)
+	{
+		Check check;
+		check.readFromFiLe(ifs);
+		cashedChecks.add(check);
+	}
+
+	size_t countMess = 0;
+	ifs.read((char*)&countMess, sizeof(size_t));
+
+	for (int i = 0; i < countMess; i++)
+	{
+		MyString mess = readStringFromFile(ifs);
+		messages.add(mess);
+	}
+
+	size_t countAccounts = 0;
+	ifs.read((char*)&countAccounts, sizeof(size_t));
+
+	for (int i = 0; i < countAccounts; i++)
+	{
+		BankAccount ba;
+		ba.readFromFiLe(ifs);
+		accounts.add(ba);
+	}
+}

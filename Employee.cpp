@@ -1,6 +1,7 @@
 #include "Employee.h"
+#include "SerializeFunctions.h"
 
-const MyString& getStringWithTaskType(const TypeTask& type)
+const char* getStringWithTaskType(const TypeTask& type)
 {
 	switch (type)
 	{
@@ -51,26 +52,24 @@ void Employee::whoami()const
 	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
 }
 
-void Employee::addTask(const MyString& bankName, const Person& user, TypeTask type, const MyString& name, const BankAccount& account)
+void Employee::addTask(const Task& task)
 {
-	Task task(type, name, user, bankName, account);
 	tasksCollection.add(task);
 }
-
 void  Employee::showAllTasks()const
 {
 	for (int i = 0; i < tasksCollection.getCount(); i++)
 	{
 		std::cout << "[" << i << "] " << getStringWithTaskType(tasksCollection[i].getType());
 
-		if (tasksCollection[i].getType())
+		if (tasksCollection[i].getType() == TypeTask::Change)
 		{
 			if (tasksCollection[i].getApproved())
 			{
 				std::cout << " (approved) ";
 			}
 		}
-		std::cout << "- " + tasksCollection[i].getName();
+		std::cout << " - " + tasksCollection[i].getName() << std::endl;
 	}
 }
 
@@ -87,4 +86,44 @@ void Employee::changeApproveWithIndex(unsigned index)
 void Employee::setAccountBalanceWithIndex(unsigned index, unsigned newBalance)
 {
 	tasksCollection[index].setAccountBalance(newBalance);
+}
+
+void Employee::writeToFile(std::ofstream& ofs) const
+{
+	Person::writeToFile(ofs);
+
+	unsigned pass = getPassword();
+	ofs.write((const char*)&pass, sizeof(unsigned));
+
+	writeStringToFile(ofs, bankName);
+
+	size_t countTasks = tasksCollection.getCount();
+	ofs.write((const char*)&countTasks, sizeof(size_t));
+
+	for (int i = 0; i < countTasks; i++)
+	{
+		tasksCollection[i].writeToFile(ofs);
+	}
+}
+
+void Employee::readFromFiLe(std::ifstream& ifs)
+{
+	Person::readFromFiLe(ifs);
+
+	unsigned pass = 0;
+	ifs.read((char*)&pass, sizeof(unsigned));
+	setPassword(pass);
+
+	bankName = readStringFromFile(ifs);
+
+	size_t countTasks = 0;
+	ifs.read((char*)&countTasks, sizeof(size_t));
+
+	for (int i = 0; i < countTasks; i++)
+	{
+		Task ts;
+		ts.readFromFiLe(ifs);
+		tasksCollection.add(ts);
+	}
+
 }
