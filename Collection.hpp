@@ -36,6 +36,7 @@ template<typename T>
 void Collection<T>::free()
 {
 	delete[] collection;
+	collection = nullptr;
 	size = 0;
 	capacity = DEFAULT_SIZE;
 }

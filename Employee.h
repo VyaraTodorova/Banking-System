@@ -27,6 +27,6 @@ public:
 	void writeToFile(std::ofstream& ofs) const;
 	void readFromFiLe(std::ifstream& ifs);
 protected:
-	MyString bankName;
+	MyString bankName = "";
 	Collection<Task> tasksCollection;
 };

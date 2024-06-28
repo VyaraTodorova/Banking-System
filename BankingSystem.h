@@ -4,7 +4,6 @@
 #include "ThirdPartyEmployee.h"
 #include "Collection.hpp"
 
-
 constexpr unsigned MAX_TASKS = 10000;
 
 class BankingSystem
@@ -54,7 +53,7 @@ private:
 	int getIndexOfClientWithEGN(unsigned EGN)const;
 	unsigned getUniqueNumber()const;
 	bool checkIfAccountNumberIsUnique(unsigned number)const;
-	const MyString& getUniqueCode()const;
+	MyString getUniqueCode()const;
 	bool checkIfCodeIsUnique(const MyString& code)const;
 };
 

@@ -1,4 +1,5 @@
 #include "HelpFunctions.h"
+
 constexpr int MAX_NUM = 40000;
 constexpr int MAX_LEN_CODE = 3;
 
@@ -47,7 +48,7 @@ unsigned randomNumber()
 	return number;
 }
 
-const char* generateCode()
+MyString generateCode()
 {
 	char code[MAX_LEN_CODE + 1];
 	const char characters[] = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -62,5 +63,8 @@ const char* generateCode()
 	}
 
 	code[MAX_LEN_CODE] = '\0';
+	
+	MyString codeStr(code);
+	return codeStr;
 }
 

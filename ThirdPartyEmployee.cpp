@@ -19,8 +19,8 @@ void ThirdPartyEmployee::help()const
 
 void ThirdPartyEmployee::whoami()const
 {
-	std::cout << "You are " + getName() + getSurname() << std::endl;
-	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
+	std::cout << "You are " << getName() << " " << getSurname() << std::endl;
+	std::cout << "Age: " << getAge() << std::endl << "EGN:" << getEGN() << std::endl;
 }
 
 void ThirdPartyEmployee::writeToFile(std::ofstream& ofs) const

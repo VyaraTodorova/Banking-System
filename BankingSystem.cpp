@@ -326,7 +326,7 @@ void BankingSystem::messages()const
 	}
 	
 	clients[currentIndex].showMessages();
-	clients[currentIndex].clearAllMessages();
+	//clients[currentIndex].clearAllMessages();
 }
 
 void BankingSystem::tasks()const
@@ -372,7 +372,7 @@ void BankingSystem::approve(unsigned taskId)
 		clients[index].addAccount(ba);
 		
 		MyString accountNumberString = toString(number);
-		MyString mess = "You opened an account in" + employees[currentIndex].getBankName() +
+		MyString mess = "You opened an account in " + employees[currentIndex].getBankName() +
 			". Your account id is " + accountNumberString + ".";
 		clients[index].addMessage(mess);
 	}
@@ -399,7 +399,9 @@ void BankingSystem::approve(unsigned taskId)
 			}
 			else
 			{
-				std::cout << "Cannot proceed - Please make sure " << clients[index].getName() << " is real user." << std::endl;
+				std::cout << "Cannot proceed - Please make sure " << clients[index].getName() <<
+					" is real user." << std::endl;
+				return;
 			}
 		}
 	}
@@ -472,10 +474,12 @@ void BankingSystem::sendCheck(unsigned sum, const MyString& bankName, unsigned E
 		throw std::invalid_argument("Client with this EGN does not exist.");
 	}
 
-	MyString code = getUniqueCode();
+	MyString code(getUniqueCode());
 	Check check(code, sum);
 	clients[index].addCheck(check);
-	clients[index].addMessage("You have a check assigned to you by " + thirdPartyEmployees[currentIndex].getName());
+	MyString mess = "You have a check assigned to you by " + thirdPartyEmployees[currentIndex].getName() +
+		". Your check code is " + code + ".";
+	clients[index].addMessage(mess);
 }
 
 void BankingSystem::writeToFile() const
@@ -606,7 +610,7 @@ unsigned BankingSystem::getIndexOfTheLeastBusyEmployee(const MyString& bankName)
 
 	if (currentIndex != -1)
 	{
-		return currentIndex;
+		return currentMinIndex;
 	}
 	else
 	{
@@ -690,7 +694,7 @@ unsigned BankingSystem::getUniqueNumber()const
 	return number;
 }
 
-const MyString& BankingSystem::getUniqueCode()const
+MyString BankingSystem::getUniqueCode()const
 {
 	MyString code;
 	do

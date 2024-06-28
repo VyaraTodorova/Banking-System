@@ -16,7 +16,7 @@ public:
 	void writeToFile(std::ofstream& ofs) const;
 	void readFromFiLe(std::ifstream& ifs);
 private:
-	Pair<MyString, unsigned int > check;
+	Pair<MyString, unsigned int > check = {"",0};
 
 	bool isGood(const char* str)const;
 };

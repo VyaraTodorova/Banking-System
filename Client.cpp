@@ -22,8 +22,8 @@ void Client::help()const
 
 void Client::whoami()const
 {
-	std::cout << "You are " + getName() + " " + getSurname() << std::endl;
-	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
+	std::cout << "You are " << getName() << " " << getSurname() << std::endl
+	<< "Age: " << getAge() << std::endl << "EGN:" << getEGN() << std::endl;
 }
 
 void Client::addCheck(const Check& check)
@@ -113,7 +113,7 @@ void Client::showAmountInAccount(const MyString& bankName, unsigned accountNumbe
 	{
 		if (accounts[i].getAccountNumber() == accountNumber && accounts[i].getBankName() == bankName)
 		{
-			std::cout << accounts[i].getAmount() << "$";
+			std::cout << accounts[i].getAmount() << "$" << std::endl;
 			return;
 		}
 	}
@@ -121,7 +121,7 @@ void Client::showAmountInAccount(const MyString& bankName, unsigned accountNumbe
 	throw std::invalid_argument("This account does not exist.");
 }
 
-const BankAccount& Client::getAccount(unsigned accountNumber)const
+ BankAccount Client::getAccount(unsigned accountNumber)const
 {
 	for (int i = 0; i < accounts.getCount(); i++)
 	{
@@ -139,7 +139,7 @@ unsigned Client::getCountOfAccounts()const
 	return accounts.getCount();
 }
 
-const MyString& Client::getNameOfBankAccount(unsigned index)const
+MyString Client::getNameOfBankAccount(unsigned index)const
 {
 	return accounts[index].getBankName();
 }

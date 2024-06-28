@@ -127,7 +127,7 @@ void run()
 			unsigned accountNumber;
 			std::cin >> accountNumber;
 
-			std::cout << "Code";
+			std::cout << "Code:";
 			MyString code;
 			std::cin >> code;
 			bs.redeem(bankName, accountNumber, code);

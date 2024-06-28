@@ -19,8 +19,8 @@ public:
 	void writeToFile(std::ofstream& ofs) const;
 	void readFromFiLe(std::ifstream& ifs);
 private:
-	MyString name;
-	MyString surname;
+	MyString name = "";
+	MyString surname = "";
 	unsigned EGN = 0;
 	unsigned age = 0;
 };

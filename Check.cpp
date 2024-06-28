@@ -1,7 +1,7 @@
 #include "Check.h"
 #include "Utils.h"
 #include "SerializeFunctions.h"
-constexpr unsigned CHECK_LEN = 3;
+constexpr unsigned CHECK_LEN = 4;
 
 Check::Check() : check("", 0) {}
 
@@ -21,10 +21,10 @@ Check::Check(const MyString& code, unsigned int price)
 
 bool Check::isGood(const char* str)const
 {
-	if (strLen(str) != CHECK_LEN)
+	/*if (strLen(str) != CHECK_LEN)
 	{
 		return false;
-	}
+	}*/
 
 	while (*str)
 	{

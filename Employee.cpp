@@ -48,8 +48,8 @@ void Employee::help()const
 
 void Employee::whoami()const
 {
-	std::cout << "You are " + getName() + getSurname() << std::endl;
-	std::cout << "Age: " + getAge() << std::endl << "EGN:" + getEGN() << std::endl;
+	std::cout << "You are " << getName() << " " << getSurname() << std::endl;
+	std::cout << "Age: " << getAge() << std::endl << "EGN:" << getEGN() << std::endl;
 }
 
 void Employee::addTask(const Task& task)

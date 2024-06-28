@@ -31,10 +31,10 @@ public:
 	void writeToFile(std::ofstream& ofs) const;
 	void readFromFiLe(std::ifstream& ifs);
 private:
-	TypeTask type;
-	MyString name;
+	TypeTask type = TypeTask::Unknown;
+	MyString name = "";
 	Person user;
-	MyString bank; 
+	MyString bank = "";
 	BankAccount account;
 	bool approved = false;
 };

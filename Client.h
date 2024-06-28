@@ -25,9 +25,9 @@ public:
 	void changeAccountBank(unsigned accountNumber, const MyString& newBankName, unsigned newAccountNumber);
 
 	void showAmountInAccount(const MyString& bankName, unsigned accountNumber)const;
-	const BankAccount& getAccount(unsigned accountNumber)const;
+	BankAccount getAccount(unsigned accountNumber)const;
 	unsigned getCountOfAccounts()const;
-	const MyString& getNameOfBankAccount(unsigned index)const;
+	MyString getNameOfBankAccount(unsigned index)const;
 	unsigned getAccountNumberFromIndex(unsigned index)const;
 	int getIndexOfAccountFromNumber(unsigned number)const;
 	bool checkIfAccountNumberIsUniqueForPerson(unsigned number)const;
@@ -41,7 +41,7 @@ public:
 private:
 	Collection<Check> checks;
 	Collection<Check> cashedChecks;
-	MyString address;
+	MyString address = "";
 	Collection<MyString> messages;
 	Collection<BankAccount> accounts;
 
